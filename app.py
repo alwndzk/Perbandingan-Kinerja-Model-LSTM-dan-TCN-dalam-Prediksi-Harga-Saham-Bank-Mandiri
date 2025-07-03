@@ -36,6 +36,7 @@ st.write("Dibuat oleh: Alwan Dzaki Syaeffudin")
 def load_data(ticker, start_date, end_date):
     data = yf.download(ticker, start=start_date, end=end_date)
     data = data[['Open', 'High', 'Low', 'Close', 'Volume']]
+    data.dropna(inplace=True)
     return data
 
 # Cache untuk memuat model agar tidak di-load berulang kali
