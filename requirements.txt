@@ -4,5 +4,5 @@ pandas
 numpy
 matplotlib
 scikit-learn
-tensorflow
-keras-tcn
+tensorflow==2.15.0
+keras-tcn==3.5.0
