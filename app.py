@@ -41,9 +41,14 @@ def load_data(ticker, start_date, end_date):
 # Cache untuk memuat model agar tidak di-load berulang kali
 @st.cache_resource
 def load_prediction_model(model_path):
-    # Menambahkan custom_objects untuk TCN agar modelnya bisa di-load dengan benar
-    return load_model(model_path, custom_objects={'TCN': TCN})
-
+    # Menambahkan custom_objects untuk TCN dan compile=False untuk stabilitas
+    try:
+        model = load_model(model_path, custom_objects={'TCN': TCN}, compile=False)
+        return model
+    except Exception as e:
+        st.error(f"Gagal memuat model dari {model_path}. Error: {e}")
+        return None
+    
 # Fungsi untuk membuat dataset sekuensial
 def create_dataset(data, time_steps=60):
     x, y = [], []
