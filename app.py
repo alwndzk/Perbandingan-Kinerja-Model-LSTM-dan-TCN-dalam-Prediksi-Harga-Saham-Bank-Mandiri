@@ -22,7 +22,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("Perbandingan Kinerja Model LSTM vs TCN untuk Prediksi Harga Saham BMRI")
+st.title("Perbandingan Kinerja Model LSTM dan TCN untuk Prediksi Harga Saham Bank Mandiri (BMRI)")
 st.write("Dibuat oleh: Alwan Dzaki Syaeffudin")
 
 # -----------------
@@ -169,6 +169,7 @@ with st.spinner(f'Memuat data saham dari {csv_file_path}...'):
 if df_bmri is not None:
     st.header("Analisis Data Eksplorasi (EDA)")
     st.write("Berikut adalah grafik harga penutupan historis saham BMRI.")
+    st.write("Grafik ini menampilkan harga penutupan saham BMRI dari 16 Februari 2015 hingga 16 Februari 2025.")
     fig_hist, ax_hist = plt.subplots(figsize=(12, 6))
     ax_hist.plot(df_bmri.index, df_bmri['Close'], color='blue')
     ax_hist.set_title('Grafik Harga Historis Saham BMRI')
@@ -204,7 +205,7 @@ if df_bmri is not None:
                 st.metric(label="R-squared (Akurasi)", value=f"{lstm_results['r2']:.2%}")
                 st.metric(label="RMSE", value=f"Rp {lstm_results['rmse']:.2f}")
                 st.metric(label="MAPE", value=f"{lstm_results['mape']:.2f}%")
-                st.success(f"Prediksi Harga Besok: Rp {lstm_results['next_day_prediction']:,.2f}")
+                st.success(f"Prediksi Harga Penutupan Saham BMRI di Hari Berikutnya: Rp {lstm_results['next_day_prediction']:,.2f}")
             with col2:
                 st.subheader("Hasil Model TCN")
                 fig_tcn, ax_tcn = plt.subplots(figsize=(10, 5))
@@ -217,7 +218,7 @@ if df_bmri is not None:
                 st.metric(label="R-squared (Akurasi)", value=f"{tcn_results['r2']:.2%}")
                 st.metric(label="RMSE", value=f"Rp {tcn_results['rmse']:.2f}")
                 st.metric(label="MAPE", value=f"{tcn_results['mape']:.2f}%")
-                st.success(f"Prediksi Harga Besok: Rp {tcn_results['next_day_prediction']:,.2f}")
+                st.success(f"Prediksi Harga Penutupan Saham BMRI di Hari Berikutnya: Rp {tcn_results['next_day_prediction']:,.2f}")
     else:
         st.header(f"Analisis Model {model_choice}")
         with st.spinner(f'Memuat hasil model {model_choice}...'):
@@ -235,9 +236,9 @@ if df_bmri is not None:
             st.pyplot(fig)
             st.subheader("Metrik Evaluasi Model")
             col1, col2, col3 = st.columns(3)
-            col1.metric(label="R-squared (Akurasi)", value=f"{results['r2']:.2%}")
+            col1.metric(label="R-squared", value=f"{results['r2']:.2%}")
             col2.metric(label="RMSE", value=f"Rp {results['rmse']:.2f}")
             col3.metric(label="MAPE", value=f"{results['mape']:.2f}%")
-            st.success(f"Prediksi Harga Saham untuk Hari Berikutnya: Rp {results['next_day_prediction']:,.2f}")
+            st.success(f"Prediksi Harga Penutupan Saham untuk Hari Berikutnya: Rp {results['next_day_prediction']:,.2f}")
 else:
     st.warning("Gagal memuat data dari file CSV. Aplikasi tidak dapat berjalan.")
