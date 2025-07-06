@@ -14,7 +14,7 @@ from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_percenta
 import tensorflow as tf
 from tensorflow.keras.models import load_model 
 from tcn import TCN
-# -------------------------------s-
+# --------------------------------
 
 # -----------------
 # Konfigurasi Halaman
@@ -65,49 +65,22 @@ def get_model_predictions(model_name, df):
     scaler_path = f'models/scaler_{model_name.lower()}.pkl'
     
     model = load_prediction_model(model_path)
-    if model is None:
-        st.error(f"Model {model_name} tidak dapat dimuat.")
-        return None
-        
     with open(scaler_path, 'rb') as f:
         scaler = pickle.load(f)
 
-    # --- PERBAIKAN FINAL DI SINI ---
-    expected_columns = ['Open', 'High', 'Low', 'Close', 'Volume']
-    
-    try:
-        # 1. Pilih kolom yang relevan
-        features = df[expected_columns].copy()
-        
-        # 2. Paksa semua kolom menjadi tipe data numerik.
-        #    errors='coerce' akan mengubah nilai yang tidak bisa diubah menjadi NaN.
-        for col in expected_columns:
-            features[col] = pd.to_numeric(features[col], errors='coerce')
-            
-        # 3. Hapus baris yang mungkin memiliki NaN setelah konversi (sebagai pengaman tambahan)
-        features.dropna(inplace=True)
-        
-        # 4. Cek apakah ada data tersisa setelah dibersihkan
-        if features.empty:
-            st.error("Data menjadi kosong setelah dibersihkan, periksa data sumber.")
-            return None
-
-    except KeyError as e:
-        st.error(f"Error: Kolom yang dibutuhkan tidak ditemukan di data. {e}")
-        return None
-    # ---------------------------------
-    
     # Pre-processing data
+    features = df[['Open', 'High', 'Low', 'Close', 'Volume']]
     scaled_data = scaler.transform(features)
 
-    # Sisa kode sama persis...
     train_size = int(len(scaled_data) * 0.8)
     test_data = scaled_data[train_size:]
     
     x_test, y_test_scaled = create_dataset(test_data)
     
+    # Prediksi
     predictions_scaled = model.predict(x_test)
 
+    # Denormalisasi
     test_data_partial = test_data[60:]
     zero_fill_pred = np.zeros((len(predictions_scaled), scaled_data.shape[1]))
     zero_fill_pred[:, 3] = predictions_scaled.flatten()
@@ -115,10 +88,12 @@ def get_model_predictions(model_name, df):
 
     y_test_denormalized = scaler.inverse_transform(test_data_partial)[:, 3]
 
+    # Evaluasi
     r2 = r2_score(y_test_denormalized, predictions_denormalized)
     rmse = np.sqrt(mean_squared_error(y_test_denormalized, predictions_denormalized))
     mape = mean_absolute_percentage_error(y_test_denormalized, predictions_denormalized) * 100
 
+    # Prediksi hari berikutnya
     last_60_days = scaled_data[-60:]
     last_60_days_reshaped = np.reshape(last_60_days, (1, last_60_days.shape[0], last_60_days.shape[1]))
     predicted_next_day_scaled = model.predict(last_60_days_reshaped)
@@ -164,7 +139,7 @@ st.pyplot(fig_hist)
 
 
 # -----------------
-# Kode Logika Tampilan Utama
+# Logika Tampilan Utama
 # -----------------
 if model_choice == "Perbandingan":
     st.header("Perbandingan Model LSTM dan TCN")
