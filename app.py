@@ -156,12 +156,11 @@ model_choice = st.sidebar.selectbox(
 # -----------------
 # Memuat Data Utama
 # -----------------
-# --- PERUBAHAN UTAMA: Memuat dari file CSV lokal ---
+# --- Memuat data file CSV lokal ---
 csv_file_path = 'data_saham/SAHAM-BMRI.JK.csv'
 
 with st.spinner(f'Memuat data saham dari {csv_file_path}...'):
     df_bmri = load_data_from_csv(csv_file_path)
-# ----------------------------------------------------
 
 # -----------------
 # Logika Tampilan Utama
@@ -177,10 +176,6 @@ if df_bmri is not None:
     ax_hist.set_ylabel('Harga Penutupan (IDR)')
     ax_hist.grid(True)
     st.pyplot(fig_hist)
-
-    # ... Sisa kode tampilan sama persis seperti sebelumnya ...
-    # ... Tidak perlu diubah ...
-    # ... (Silakan copy-paste bagian ini dari kode lamamu) ...
 
     if model_choice == "Perbandingan":
         st.header("Perbandingan Model LSTM dan TCN")
