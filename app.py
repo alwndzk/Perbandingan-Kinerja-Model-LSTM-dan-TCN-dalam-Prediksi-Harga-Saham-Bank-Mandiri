@@ -139,7 +139,7 @@ st.pyplot(fig_hist)
 
 
 # -----------------
-# Logika Tampilan Utama
+# Kode Logika Tampilan Utama
 # -----------------
 if model_choice == "Perbandingan":
     st.header("Perbandingan Model LSTM dan TCN")
