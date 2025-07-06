@@ -14,7 +14,7 @@ from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_percenta
 import tensorflow as tf
 from tensorflow.keras.models import load_model 
 from tcn import TCN
-# --------------------------------
+# -------------------------------s-
 
 # -----------------
 # Konfigurasi Halaman
@@ -65,11 +65,26 @@ def get_model_predictions(model_name, df):
     scaler_path = f'models/scaler_{model_name.lower()}.pkl'
     
     model = load_prediction_model(model_path)
+    if model is None: # Cek jika model gagal dimuat
+        st.error(f"Model {model_name} tidak dapat dimuat.")
+        return None 
+        
     with open(scaler_path, 'rb') as f:
         scaler = pickle.load(f)
 
+    # --- INI BAGIAN PERBAIKANNYA ---
+    # 1. Definisikan kolom yang diharapkan secara eksplisit
+    expected_columns = ['Open', 'High', 'Low', 'Close', 'Volume']
+    
+    # 2. Pastikan DataFrame hanya berisi kolom-kolom ini
+    try:
+        features = df[expected_columns].copy()
+    except KeyError as e:
+        st.error(f"Error: Kolom yang dibutuhkan tidak ditemukan di data. {e}")
+        return None
+    # ---------------------------------
+    
     # Pre-processing data
-    features = df[['Open', 'High', 'Low', 'Close', 'Volume']]
     scaled_data = scaler.transform(features)
 
     train_size = int(len(scaled_data) * 0.8)
