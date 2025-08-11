@@ -171,7 +171,7 @@ if df_bmri is not None:
                 st.pyplot(fig_lstm)
 
                 st.metric(label="R-squared", value=f"{lstm_results['r2']:.2%}")
-                st.metric(label="RMSE", value=f"Rp {lstm_results['rmse']:.2f}")
+                st.metric(label="RMSE", value=f"{lstm_results['rmse']:.2f}")
                 st.metric(label="MAPE", value=f"{lstm_results['mape']:.2f}%")
                 
                 # --- MENAMPILKAN PREDIKSI 7 HARI ---
@@ -182,7 +182,7 @@ if df_bmri is not None:
                     'Prediksi LSTM (IDR)': lstm_results["predicted"][:7]
                 }, index=lstm_results["dates"][:7])
                 comparison_test_df_lstm.index = comparison_test_df_lstm.index.strftime('%Y-%m-%d')
-                st.dataframe(comparison_test_df_lstm.style.format("Rp {:,.2f}"), use_container_width=True)
+                st.dataframe(comparison_test_df_lstm.style.format("{:,.2f}"), use_container_width=True)
 
             with col2:
                 st.subheader("Hasil Model TCN")
@@ -195,7 +195,7 @@ if df_bmri is not None:
                 st.pyplot(fig_tcn)
                 
                 st.metric(label="R-squared", value=f"{tcn_results['r2']:.2%}")
-                st.metric(label="RMSE", value=f"Rp {tcn_results['rmse']:.2f}")
+                st.metric(label="RMSE", value=f"{tcn_results['rmse']:.2f}")
                 st.metric(label="MAPE", value=f"{tcn_results['mape']:.2f}%")
 
                 # --- MENAMPILKAN PREDIKSI 7 HARI ---
@@ -206,7 +206,7 @@ if df_bmri is not None:
                     'Prediksi TCN (IDR)': tcn_results["predicted"][:7]
                 }, index=tcn_results["dates"][:7])
                 comparison_test_df_tcn.index = comparison_test_df_tcn.index.strftime('%Y-%m-%d')
-                st.dataframe(comparison_test_df_tcn.style.format("Rp {:,.2f}"), use_container_width=True)
+                st.dataframe(comparison_test_df_tcn.style.format("{:,.2f}"), use_container_width=True)
 
     else: # Tampilan untuk model individual
         st.header(f"Analisis Model {model_choice}")
@@ -228,7 +228,7 @@ if df_bmri is not None:
             st.subheader("Metrik Evaluasi Model")
             col1, col2, col3 = st.columns(3)
             col1.metric(label="R-squared", value=f"{results['r2']:.2%}")
-            col2.metric(label="RMSE", value=f"Rp {results['rmse']:.2f}")
+            col2.metric(label="RMSE", value=f"{results['rmse']:.2f}")
             col3.metric(label="MAPE", value=f"{results['mape']:.2f}%")
             
             # --- MENAMPILKAN PREDIKSI 7 HARI ---
@@ -239,7 +239,7 @@ if df_bmri is not None:
                 'Harga Prediksi (IDR)': results["predicted"][:7]
             }, index=results["dates"][:7])
             test_df.index = test_df.index.strftime('%Y-%m-%d')
-            st.dataframe(test_df.style.format("Rp {:,.2f}"), use_container_width=True)
+            st.dataframe(test_df.style.format("{:,.2f}"), use_container_width=True)
 
 else:
     st.warning("Gagal memuat data dari file CSV. Aplikasi tidak dapat berjalan.")
