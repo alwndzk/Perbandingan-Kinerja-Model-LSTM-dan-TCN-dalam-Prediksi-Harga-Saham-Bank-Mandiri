@@ -19,7 +19,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("Perbandingan Model LSTM dan TCN untuk Prediksi Harga Saham Bank Mandiri (BMRI)")
+st.title("Perbandingan Model LSTM dan TCN Pada Prediksi Harga Saham Bank Mandiri (BMRI)")
 st.write("Dibuat oleh: Alwan Dzaki Syaeffudin")
 
 # -----------------
@@ -142,7 +142,7 @@ with st.spinner(f'Memuat data saham dari {csv_file_path}...'):
 if df_bmri is not None:
     st.header("Analisis Data Eksplorasi (EDA)")
     st.write("Grafik ini menampilkan harga penutupan saham BMRI dari 14 Februari 2015 hingga 14 Februari 2025.")
-    fig_hist, ax_hist = plt.subplots(figsize=(12, 6))
+    fig_hist, ax_hist = plt.subplots(figsize=(12, 3))
     ax_hist.plot(df_bmri.index, df_bmri['Close'], color='blue')
     ax_hist.set_title('Grafik Harga Historis Saham BMRI')
     ax_hist.set_xlabel('Tahun')
@@ -175,7 +175,7 @@ if df_bmri is not None:
                 st.metric(label="MAPE", value=f"{lstm_results['mape']:.2f}%")
                 
                 # --- MENAMPILKAN PREDIKSI 7 HARI ---
-                st.write("**Perbandingan Harga Aktual dan Harga Prediksi 7 Hari Terakhir**")
+                st.write("**Perbandingan Harga Aktual dan Harga Prediksi**")
                 # Membuat DataFrame untuk 7 hari terakhir
                 comparison_test_df_lstm = pd.DataFrame({
                     'Harga Aktual (IDR)': lstm_results["actual"][:7],
@@ -199,7 +199,7 @@ if df_bmri is not None:
                 st.metric(label="MAPE", value=f"{tcn_results['mape']:.2f}%")
 
                 # --- MENAMPILKAN PREDIKSI 7 HARI ---
-                st.write("**Perbandingan Harga Aktual dan Harga Prediksi 7 Hari Terakhir**")
+                st.write("**Perbandingan Harga Aktual dan Harga Prediksi**")
                 # Membuat DataFrame untuk 7 hari terakhir
                 comparison_test_df_tcn = pd.DataFrame({
                     'Harga Aktual (IDR)': tcn_results["actual"][:7],
@@ -215,7 +215,7 @@ if df_bmri is not None:
         
         if results:
             st.subheader(f"Grafik Prediksi Model {model_choice}")
-            fig, ax = plt.subplots(figsize=(12, 6))
+            fig, ax = plt.subplots(figsize=(12, 3))
             ax.plot(results["dates"], results["actual"], color='blue', label='Harga Aktual')
             ax.plot(results["dates"], results["predicted"], color='red' if model_choice == 'LSTM' else 'orange', label='Harga Prediksi')
             ax.set_title(f'{model_choice}: Harga Aktual vs Prediksi')
@@ -232,7 +232,7 @@ if df_bmri is not None:
             col3.metric(label="MAPE", value=f"{results['mape']:.2f}%")
             
             # --- MENAMPILKAN PREDIKSI 7 HARI ---
-            st.subheader("Perbandingan Harga Aktual dan Harga Prediksi 7 Hari Terakhir")
+            st.subheader("Perbandingan Harga Aktual dan Harga Prediksi")
             # Membuat DataFrame untuk 7 hari terakhir
             test_df = pd.DataFrame({
                 'Harga Aktual (IDR)': results["actual"][:7],
